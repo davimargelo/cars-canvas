@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body onload="startGame()">
+    <script>
+
+        var car1;
+        var car2;
+        var myBackground;
+        var sem1;
+        var sem2;
+
+        function startGame() {
+            car1 = new component(115, 75, "car1.png", -115, 160, "image", 0);
+            car2 = new component(75, 115, "car2.png", 212, -250, "image", 0);
+            car3 = new component(75, 115, "car3.png", 250, -115, "image", 0);
+            sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
+            sem2 = new component(115, 115, "semGreen.png", 350, 70, "image", 0);
+            myBackground = new component(1000, 800, "background.png", 0, 0, "image", 0);
+            myGameArea.start();
+        }
+
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function () {
+                this.canvas.width = 1000;
+                this.canvas.height = 800;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.frameNo = 0;
+                this.interval = setInterval(updateGameArea, 20);
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function () {
+                clearInterval(this.interval);
+            }
+        }
+
+        function component(width, height, image, x, y, type, angle) {
+            this.type = type;
+            this.image = new Image();
+            this.image.src = image;
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.x = x;
+            this.y = y;
+            this.angle = 0;
+
+            this.update = function () {
+                ctx = myGameArea.context;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.drawImage(this.image,
+                    this.x,
+                    this.y,
+                    this.width, this.height,
+                );
+                ctx.restore();
+            }
+            this.newPos = function () {
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+        }
+
+        function updateGameArea() {
+            myGameArea.clear();
+            myBackground.newPos();
+            myBackground.update();
+            car1.newPos();
+            car1.update();
+            car2.newPos();
+            car2.update();
+            car3.newPos();
+            car3.update();
+            sem1.newPos();
+            sem1.update();
+            sem2.newPos();
+            sem2.update();
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function move(dir, car) {
+            
+            if (dir == "down") { car.speedY = 2; }
+            if (dir == "right") { car.speedX = 2; }
+            if (dir == "rotate") {
+                for (var i = 0; i < 90; i++) {
+                    car.angle -= 1 * Math.PI / 180;
+                    await sleep(0.1);
+                    car.y += 2.4 + (0.035 * i);
+                    car.x -= 0.95 + (0.03 * i);
+                }
+            }
+        }
+
+        function clearmove(car) {
+            car.speedX = 0;
+            car.speedY = 0;
+        }
+
+        function resetcar1() {
+            sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
+            car1 = new component(115, 75, "car1.png", -115, 160, "image", 0);
+        }
+
+        function resetcar2() {
+            sem2 = new component(115, 115, "semGreen.png", 350, 70, "image", 0);
+            car2 = new component(75, 115, "car2.png", 212, -250, "image", 0);
+        }
+
+        function resetcar3() {
+            car3 = new component(75, 115, "car3.png", 250, -115, "image", 0);
+        }
+
+        var delay = 0;
+        var delayMilliseconds = 250;
+
+        function doTimeoutCar1(i, delay) {
+            setTimeout(function () {
+                if ((i > 5) && (i < 25)) {
+                    sem1 = new component(115, 115, "semRed.png", 100, 70, "image", 0);
+                    if (i > 7)
+                        clearmove(car1);
+                    if (i > 23) {
+                        sem1 = new component(115, 115, "semGreen.png", 100, 70, "image", 0);
+                    }
+                }
+                else if (i == 49) {
+                    resetcar1();
+                    loopCars();
+                } else {
+                    if (i > 38)
+                        sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
+                    move("right", car1);
+                }
+            }, delay);
+        }
+
+        function doTimeoutCar2(i, delay) {
+            setTimeout(function () {
+                if (i > 18 && i < 25) {
+                    sem2 = new component(115, 115, "semYellow.png", 350, 70, "image", 0);
+                    if (i >= 24)
+                        sem2 = new component(115, 115, "semRed.png", 350, 70, "image", 0);
+                } else if (i == 49) {
+                    resetcar2();
+                } else {
+                    move("down", car2);
+                }
+            }, delay);
+        }
+
+
+        function doTimeoutCar3(i, delay) {
+            setTimeout(function () {
+                if (i <= 9)
+                    move("down", car3);
+                else if (i == 10) {
+                    move("rotate", car3);
+
+                } else if (i == 49) {
+                    resetcar3();
+                } else
+                    move("right", car3);
+            }, delay);
+        }
+
+        function loopCars() {
+            for (var i = 0; i < 50; i++) {
+                delay = i * delayMilliseconds;
+                doTimeoutCar1(i, delay);
+                doTimeoutCar2(i, delay);
+                doTimeoutCar3(i, delay);
+            }
+        }
+        loopCars();
+    </script>
+</body>
+
+</html>
