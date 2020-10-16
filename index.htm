@@ -21,12 +21,12 @@
         var sem2;
 
         function startGame() {
-            car1 = new component(115, 75, "car1.png", -115, 160, "image", 0);
-            car2 = new component(75, 115, "car2.png", 212, -250, "image", 0);
-            car3 = new component(75, 115, "car3.png", 250, -115, "image", 0);
-            sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
-            sem2 = new component(115, 115, "semGreen.png", 350, 70, "image", 0);
-            myBackground = new component(1000, 800, "background.png", 0, 0, "image", 0);
+            car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
+            car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
+            car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
+            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
+            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
+            myBackground = new component(1000, 800, "img/background.png", 0, 0, "image", 0);
             myGameArea.start();
         }
 
@@ -118,17 +118,17 @@
         }
 
         function resetcar1() {
-            sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
-            car1 = new component(115, 75, "car1.png", -115, 160, "image", 0);
+            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
+            car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
         }
 
         function resetcar2() {
-            sem2 = new component(115, 115, "semGreen.png", 350, 70, "image", 0);
-            car2 = new component(75, 115, "car2.png", 212, -250, "image", 0);
+            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
+            car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
         }
 
         function resetcar3() {
-            car3 = new component(75, 115, "car3.png", 250, -115, "image", 0);
+            car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
         }
 
         var delay = 0;
@@ -137,11 +137,11 @@
         function doTimeoutCar1(i, delay) {
             setTimeout(function () {
                 if ((i > 5) && (i < 25)) {
-                    sem1 = new component(115, 115, "semRed.png", 100, 70, "image", 0);
+                    sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
                     if (i > 7)
                         clearmove(car1);
                     if (i > 23) {
-                        sem1 = new component(115, 115, "semGreen.png", 100, 70, "image", 0);
+                        sem1 = new component(115, 115, "img/semGreen.png", 100, 70, "image", 0);
                     }
                 }
                 else if (i == 49) {
@@ -149,7 +149,7 @@
                     loopCars();
                 } else {
                     if (i > 38)
-                        sem1 = new component(115, 115, "semYellow.png", 100, 70, "image", 0);
+                        sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
                     move("right", car1);
                 }
             }, delay);
@@ -158,9 +158,9 @@
         function doTimeoutCar2(i, delay) {
             setTimeout(function () {
                 if (i > 18 && i < 25) {
-                    sem2 = new component(115, 115, "semYellow.png", 350, 70, "image", 0);
+                    sem2 = new component(115, 115, "img/semYellow.png", 350, 70, "image", 0);
                     if (i >= 24)
-                        sem2 = new component(115, 115, "semRed.png", 350, 70, "image", 0);
+                        sem2 = new component(115, 115, "img/semRed.png", 350, 70, "image", 0);
                 } else if (i == 49) {
                     resetcar2();
                 } else {
