@@ -136,11 +136,11 @@
 
         function doTimeoutCar1(i, delay) {
             setTimeout(function () {
-                if ((i > 5) && (i < 25)) {
+                if ((i > 0) && (i < 25)) {
                     sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
                     if (i > 7)
                         clearmove(car1);
-                    if (i > 23) {
+                    if (i >= 24) {
                         sem1 = new component(115, 115, "img/semGreen.png", 100, 70, "image", 0);
                     }
                 }
