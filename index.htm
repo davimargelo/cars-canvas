@@ -123,7 +123,6 @@
         }
 
         function resetcar2() {
-            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
             car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
         }
 
@@ -137,6 +136,7 @@
         function doTimeoutCar1(i, delay) {
             setTimeout(function () {
                 if ((i > 0) && (i < 25)) {
+                    sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
                     sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
                     if (i > 7)
                         clearmove(car1);
