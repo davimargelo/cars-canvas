@@ -4,23 +4,53 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        body {
+            background-color: darkslategrey;
+            background-attachment: fixed;
+        }
+
+        audio {
+            display: none;
+        }
+
         canvas {
             border: 1px solid #d3d3d3;
             background-color: #f1f1f1;
+            float: left;
+        }
+
+        .right-box {
+            margin: 20px;
+            margin-left: 1020px;
+            height: 760px;
+            text-align: left;
+            padding: 20px;
+            background-color: dimgrey;
+            border: 1px solid #d3d3d3;
         }
     </style>
+
+    <audio id="sound-fx" autoplay loop>
+        <source src="./sound/car_sound_fx.mp3" type="audio/mp3">
+    </audio>
 </head>
 
-<body onload="startGame()">
+<body onload="startCanvas()">
+    <div class="right-box">
+        dasdas
+    </div>
     <script>
 
         var car1;
         var car2;
+        var car3;
+        var airplane;
         var myBackground;
         var sem1;
         var sem2;
 
-        function startGame() {
+        function startCanvas() {
+            airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
             car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
             car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
             car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
@@ -28,6 +58,8 @@
             sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
             myBackground = new component(1000, 800, "img/background.png", 0, 0, "image", 0);
             myGameArea.start();
+            document.getElementById("sound-fx").volume = 0.4;
+            move("right", car1);
         }
 
         var myGameArea = {
@@ -92,6 +124,8 @@
             sem1.update();
             sem2.newPos();
             sem2.update();
+            airplane.newPos();
+            airplane.update();
         }
 
         function sleep(ms) {
@@ -99,7 +133,7 @@
         }
 
         async function move(dir, car) {
-            
+
             if (dir == "down") { car.speedY = 2; }
             if (dir == "right") { car.speedX = 2; }
             if (dir == "rotate") {
@@ -120,6 +154,10 @@
         function resetcar1() {
             sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
             car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
+        }
+
+        function resetAirplane() {
+            airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
         }
 
         function resetcar2() {
@@ -184,12 +222,24 @@
             }, delay);
         }
 
+        function doTimeoutAirplane(i, delay) {
+            setTimeout(function () {
+                if (i > 25) {
+                    move("right", airplane);
+                    move("down", airplane);
+                }
+                if (i == 49)
+                    resetAirplane();
+            }, delay);
+        }
+
         function loopCars() {
             for (var i = 0; i < 50; i++) {
                 delay = i * delayMilliseconds;
                 doTimeoutCar1(i, delay);
                 doTimeoutCar2(i, delay);
                 doTimeoutCar3(i, delay);
+                doTimeoutAirplane(i, delay);
             }
         }
         loopCars();
