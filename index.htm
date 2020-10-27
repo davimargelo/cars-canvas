@@ -13,14 +13,43 @@
             text-align: center;
         }
 
+        #clouds-cover {
+            width: 1000px;
+            height: 800px;
+            background-image: url("img/clouds.gif");
+            /* background-attachment: fixed; */
+            background-repeat: no-repeat;
+            background-size: cover; 
+            opacity: 0.01;  
+            z-index: 0;
+            position: absolute;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #000000;
+        }
+
         audio {
             display: none;
         }
 
         canvas {
             border: 1px solid #d3d3d3;
-            background-color: #f1f1f1;
             float: left;
+            z-index: 2;
         }
 
         h1 {
@@ -96,6 +125,8 @@
 
 <body onload="startCanvas()">
 
+    <div id="clouds-cover"></div>
+
     <div id="right-box">
         <div class="box-header">
             <button id="top-button" class="button" onclick="addCss()">Visualizar documentação abaixo</button>
@@ -103,22 +134,104 @@
         </div>
         <h2>Função responsável pelo 'looping' da animação</h2>
         <pre><code class="language-js">
+var delay = 0;
+const delayMilliseconds = 250;
+
 function loopCars() {
+    car3GoRight = !car3GoRight;
     for (var i = 0; i < 50; i++) {
         delay = i * delayMilliseconds;
-        doTimeoutCar1(i, delay); // faz o looping do carro 1
-        doTimeoutCar2(i, delay); // " do carro 2
-        doTimeoutCar3(i, delay); // " do carro 3
-        doTimeoutAirplane(i, delay); // " do avião
+        doTimeoutCar1(i, delay);
+        doTimeoutCar2(i, delay);
+        doTimeoutCar3(i, delay);
+        doTimeoutAirplane(i, delay);
     }
 }
         </code></pre>
+        <p>- O script chama esta função no início e no final do looping dos carros (pela função do movimento do carro
+            1).
+            <br><br>
+            - A variável <code class="language-js">car3GoRight</code> é responsável por determinar se o carro 3
+            (vermelho)
+            irá para a direita ou não; de forma alternada varia entre 'true' ou 'false'.
+            <br><br>
+            - Cada função chamada dentro do 'for' é responsável por executar o movimento dos objetos no Canvas.
+            <br><br>
+            - A lógica é feita através de um <code class="language-js">setTimeOut()</code> incremental. Já que o
+            movimento é feito em 50 momentos (determinados pelo looping do 'for'), o delay atual é definido pela relação
+            do momento atual (variável incremental 'i') e do delay inicial (constante 'delayMilliseconds')
+        </p>
+        <h1>Canvas e objeto 'component'</h1>
+        <p>O Canvas é criado com as dimensões 1000x800; nele os objetos são instanciados com a seguinte função:
+            <br>
+        <pre><code class="language-js">function component(width, height, image, x, y, angle) ...</code></pre>
+        <table>
+            <tr>
+                <th>Propriedade</th>
+                <th>O que faz?</th>
+            </tr>
+            <tr>
+                <td>width</td>
+                <td>dita a largura com que o objeto surge</td>
+            </tr>
+            <tr>
+                <td>height</td>
+                <td>determina a altura do objeto</td>
+            </tr>
+            <tr>
+                <td>image</td>
+                <td>deve ser passado o caminho da imagem (as imagens usadas são do tipo .png)</td>
+            </tr>
+            <tr>
+                <td>x</td>
+                <td>a posição no eixo x</td>
+            </tr>
+            <tr>
+                <td>y</td>
+                <td>a posição no eixo y</td>
+            </tr>
+            <tr>
+                <td>angle</td>
+                <td>ângulo da imagem</td>
+            </tr>
+        </table>
+        </p>
         <h1>Carro 1 (preto)</h1>
         <img src="img/car1.png" style="float: left; margin-top: 40px;" alt="">
         <h4>Posição:</h4>
         <pre><code class="language-js">
-car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
+car1 = new component(115, 75, "img/car1.png", -115, 160, 0);
         </code></pre>
+        <table>
+            <tr>
+                <th>Propriedade</th>
+                <th>-</th>
+            </tr>
+            <tr>
+                <td>width</td>
+                <td><code class="language-js">115px</code></td>
+            </tr>
+            <tr>
+                <td>height</td>
+                <td><code class="language-js">75px</code></td>
+            </tr>
+            <tr>
+                <td>image</td>
+                <td><code class="language-js">"img/car1.png"</code></td>
+            </tr>
+            <tr>
+                <td>x</td>
+                <td><code class="language-js">-115</code></td>
+            </tr>
+            <tr>
+                <td>y</td>
+                <td><code class="language-js">160</code></td>
+            </tr>
+            <tr>
+                <td>angle</td>
+                <td><code class="language-js">0</code></td>
+            </tr>
+        </table>
         <h4>Movimento:</h4>
         <pre><code class="language-js"> 
 function doTimeoutCar1(i, delay) {
@@ -130,12 +243,12 @@ function doTimeoutCar1(i, delay) {
                 carsSound.currentTime = 0;
                 carsSound.play();
             }
-            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
-            sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
+            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, 0);
+            sem1 = new component(115, 115, "img/semRed.png", 100, 70, 0);
             if (i > 7)
                 clearmove(car1);
             if (i >= 24) {
-                sem1 = new component(115, 115, "img/semGreen.png", 100, 70, "image", 0);
+                sem1 = new component(115, 115, "img/semGreen.png", 100, 70, 0);
             }
         }
         else if (i == 49) {
@@ -143,7 +256,7 @@ function doTimeoutCar1(i, delay) {
             loopCars();
         } else {
             if (i > 38)
-                sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
+                sem1 = new component(115, 115, "img/semYellow.png", 100, 70, 0);
             move("right", car1);
         }
     }, delay);
@@ -154,7 +267,7 @@ function doTimeoutCar1(i, delay) {
         <img src="img/car2.png" style="width: 100px; float: left;" alt="">
         <h4>Posição:</h4>
         <pre><code class="language-js">
-car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
+car2 = new component(75, 115, "img/car2.png", 212, -250, 0);
         </code></pre>
         <br style="clear: both;">
         <h4>Movimento:</h4>
@@ -162,9 +275,9 @@ car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
 function doTimeoutCar2(i, delay) {
     setTimeout(function () {
         if (i > 18 && i < 25) {
-            sem2 = new component(115, 115, "img/semYellow.png", 350, 70, "image", 0);
+            sem2 = new component(115, 115, "img/semYellow.png", 350, 70, 0);
             if (i >= 24)
-                sem2 = new component(115, 115, "img/semRed.png", 350, 70, "image", 0);
+                sem2 = new component(115, 115, "img/semRed.png", 350, 70, 0);
         } else if (i == 49) {
             resetcar2();
         } else {
@@ -178,7 +291,7 @@ function doTimeoutCar2(i, delay) {
         <img src="img/car3.png" style="float: left; width: 100px;" alt="">
         <h4>Posição:</h4>
         <pre><code class="language-js">
-car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
+car3 = new component(75, 115, "img/car3.png", 250, -115, 0);
         </code></pre>
         <br style="clear: both;">
         <h4>Movimento:</h4>
@@ -187,22 +300,22 @@ function doTimeoutCar3(i, delay) {
     setTimeout(function () {
         if (i <= 9)
             move("down", car3);
-        else if (i == 10) {
+        else if (i == 10 && car3GoRight) {
             move("rotate", car3);
 
         } else if (i == 49) {
             resetcar3();
-        } else
+        } else if (car3GoRight)
             move("right", car3);
     }, delay);
-}
+}   
         </code></pre>
 
         <h1>Avião</h1>
         <img src="img/airplane.png" style="float: left; width: 180px; margin-top: 30px;" alt="">
         <h4>Posição:</h4>
         <pre><code class="language-js">
-airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
+airplane = new component(350, 350, "img/airplane.png", -150, -150, 0);
         </code></pre>
         <br style="clear: both;">
         <h4>Movimento:</h4>
@@ -234,37 +347,84 @@ function doTimeoutAirplane(i, delay) {
         var myBackground;
         var sem1;
         var sem2;
-
+        var day = true;
+        var car3GoRight = false;
         var view = true;
 
+        var car1Url = "img/car1.png";
+        var car2Url = "img/car2.png";
+        var car3Url = "img/car3.png";
+        var airplaneUrl = "img/airplane.png"
+        
         function startCanvas() {
-            airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
-            car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
-            car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
-            car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
-            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
-            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
-            myBackground = new component(1000, 800, "img/background.png", 0, 0, "image", 0);
+            airplane = new component(350, 350, airplaneUrl, -150, -150, 0);
+            car1 = new component(115, 75, car1Url, -115, 160, 0);
+            car2 = new component(75, 115, car2Url, 212, -250, 0);
+            car3 = new component(75, 115, car3Url, 250, -115, 0);
+            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, 0);
+            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, 0);
+            myBackground = new component(1000, 800, "img/background.png", 0, 0, 0);
+
             myGameArea.start();
             move("right", car1);
+        }
+
+        function changeDayAndNight() {
+            if (!day){
+                document.getElementById("clouds-cover").style.opacity = "0.05";
+                myBackground = new component(1000, 800, "img/background.png", 0, 0, 0);
+
+                car1Url = "img/car1.png";
+                car1.image.src = "img/car1.png";
+
+                car2Url = "img/car2.png";
+                car2.image.src = "img/car2.png";
+
+                car3Url = "img/car3.png";
+                car3.image.src = "img/car3.png";
+
+                airplaneUrl = "img/airplane.png";
+                airplane.image.src = "img/airplane.png";
+            }
+            else {
+                document.getElementById("clouds-cover").style.opacity = "0.2";
+                myBackground = new component(1000, 800, "img/background_night.png", 0, 0, 0);
+
+                car1Url = "img/car1_night.png";
+                car1.image.src = "img/car1_night.png";
+
+                car2Url = "img/car2_night.png";
+                car2.image.src = "img/car2_night.png";
+
+                car3Url = "img/car3_night.png";
+                car3.image.src = "img/car3_night.png";
+
+                airplaneUrl = "img/airplane_night.png";
+                airplane.image.src = "img/airplane_night.png";
+            }
+            day = !day;
         }
 
         function addCss() {
             if (view) {
                 myGameArea.canvas.style.float = "none";
+                document.getElementById("clouds-cover").style.float = "none"
+                //TODO
+                document.getElementById("clouds-cover").style.display = "none"
                 document.getElementById("right-box").style.marginLeft = "20px";
                 document.getElementById("top-button").style.display = "none";
                 document.getElementById("bot-button").style.display = "block";
             }
             else {
                 myGameArea.canvas.style.float = "left";
+                document.getElementById("clouds-cover").style.float = "left"
+                document.getElementById("clouds-cover").style.display = "block"
                 document.getElementById("right-box").style.marginLeft = "1020px";
                 document.getElementById("top-button").style.display = "block";
                 document.getElementById("bot-button").style.display = "none";
             }
             view = !view;
         }
-
 
         var myGameArea = {
             canvas: document.createElement("canvas"),
@@ -284,8 +444,7 @@ function doTimeoutAirplane(i, delay) {
             }
         }
 
-        function component(width, height, image, x, y, type, angle) {
-            this.type = type;
+        function component(width, height, image, x, y, angle) {
             this.image = new Image();
             this.image.src = image;
             this.width = width;
@@ -330,6 +489,7 @@ function doTimeoutAirplane(i, delay) {
             sem2.update();
             airplane.newPos();
             airplane.update();
+
         }
 
         function sleep(ms) {
@@ -338,8 +498,8 @@ function doTimeoutAirplane(i, delay) {
 
         async function move(dir, car) {
 
-            if (dir == "down") { car.speedY = 2; }
-            if (dir == "right") { car.speedX = 2; }
+            if (dir == "down") { car ? car.speedY = 2 : null; }
+            if (dir == "right") { car ? car.speedX = 2 : null; }
             if (dir == "rotate") {
                 for (var i = 0; i < 90; i++) {
                     car.angle -= 1 * Math.PI / 180;
@@ -356,40 +516,40 @@ function doTimeoutAirplane(i, delay) {
         }
 
         function resetcar1() {
-            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
-            car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
+            sem1 = new component(115, 115, "img/semYellow.png", 100, 70, 0);
+            car1 = new component(115, 75, car1Url, -115, 160, 0);
         }
 
         function resetAirplane() {
-            airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
+            airplane = new component(350, 350, airplaneUrl, -150, -150, 0);
         }
 
         function resetcar2() {
-            car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
+            car2 = new component(75, 115, car2Url, 212, -250, 0);
         }
 
         function resetcar3() {
-            car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
+            car3 = new component(75, 115, car3Url, 250, -115, 0);
         }
 
         var delay = 0;
-        var delayMilliseconds = 250;
+        const delayMilliseconds = 250;
 
         function doTimeoutCar1(i, delay) {
             setTimeout(function () {
                 if ((i > 0) && (i < 25)) {
                     if (i == 2) {
                         carsSound = document.getElementById("car-sound-fx");
-                        carsSound.volume = 0.4;
+                        carsSound.volume = 0.8;
                         carsSound.currentTime = 0;
                         carsSound.play();
                     }
-                    sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
-                    sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
+                    sem2 = new component(115, 115, "img/semGreen.png", 350, 70, 0);
+                    sem1 = new component(115, 115, "img/semRed.png", 100, 70, 0);
                     if (i > 7)
                         clearmove(car1);
                     if (i >= 24) {
-                        sem1 = new component(115, 115, "img/semGreen.png", 100, 70, "image", 0);
+                        sem1 = new component(115, 115, "img/semGreen.png", 100, 70, 0);
                     }
                 }
                 else if (i == 49) {
@@ -397,7 +557,7 @@ function doTimeoutAirplane(i, delay) {
                     loopCars();
                 } else {
                     if (i > 38)
-                        sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
+                        sem1 = new component(115, 115, "img/semYellow.png", 100, 70, 0);
                     move("right", car1);
                 }
             }, delay);
@@ -406,9 +566,9 @@ function doTimeoutAirplane(i, delay) {
         function doTimeoutCar2(i, delay) {
             setTimeout(function () {
                 if (i > 18 && i < 25) {
-                    sem2 = new component(115, 115, "img/semYellow.png", 350, 70, "image", 0);
+                    sem2 = new component(115, 115, "img/semYellow.png", 350, 70, 0);
                     if (i >= 24)
-                        sem2 = new component(115, 115, "img/semRed.png", 350, 70, "image", 0);
+                        sem2 = new component(115, 115, "img/semRed.png", 350, 70, 0);
                 } else if (i == 49) {
                     resetcar2();
                 } else {
@@ -421,12 +581,12 @@ function doTimeoutAirplane(i, delay) {
             setTimeout(function () {
                 if (i <= 9)
                     move("down", car3);
-                else if (i == 10) {
+                else if (i == 10 && car3GoRight) {
                     move("rotate", car3);
 
                 } else if (i == 49) {
                     resetcar3();
-                } else
+                } else if (car3GoRight)
                     move("right", car3);
             }, delay);
         }
@@ -449,6 +609,7 @@ function doTimeoutAirplane(i, delay) {
         }
 
         function loopCars() {
+            car3GoRight = !car3GoRight;
             for (var i = 0; i < 50; i++) {
                 delay = i * delayMilliseconds;
                 doTimeoutCar1(i, delay);
@@ -462,5 +623,6 @@ function doTimeoutAirplane(i, delay) {
 </body>
 
 <footer style="color: white;">&copy; Davi M. Acorsi</footer>
+<a href="#" style="color: white;" onclick="changeDayAndNight()">Boa noite!</a>
 
 </html>
