@@ -10,6 +10,7 @@
             background-color: #000000;
             background-image: linear-gradient(147deg, #000000 0%, #434343 74%);
             background-attachment: fixed;
+            text-align: center;
         }
 
         audio {
@@ -22,7 +23,11 @@
             float: left;
         }
 
-        .right-box {
+        h1 {
+            border-bottom: solid 1px white;
+        }
+
+        #right-box {
             color: white;
             margin: 20px;
             margin-left: 1020px;
@@ -35,12 +40,52 @@
             overflow-y: auto;
         }
 
+        .button {
+            width: 100%;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .button:hover {
+            color: black;
+        }
+
+        #bot-button {
+            display: none;
+        }
+
+        @media only screen and (max-width: 1227px) {
+            canvas {
+                float: none;
+            }
+
+            #right-box {
+                margin-left: 20px;
+            }
+
+            #top-button {
+                display: none;
+            }
+
+            #bot-button {
+                display: none;
+            }
+
+        }
+
         img {
             width: 180px;
         }
     </style>
 
-    <audio id="car-sound-fx" autoplay loop>
+    <audio id="car-sound-fx">
         <source src="./sound/car_sound_fx.mp3" type="audio/mp3">
     </audio>
 
@@ -50,7 +95,12 @@
 </head>
 
 <body onload="startCanvas()">
-    <div class="right-box">
+
+    <div id="right-box">
+        <div class="box-header">
+            <button id="top-button" class="button" onclick="addCss()">Visualizar documentação abaixo</button>
+            <button id="bot-button" class="button" onclick="addCss()">Visualizar documentação na aba lateral</button>
+        </div>
         <h2>Função responsável pelo 'looping' da animação</h2>
         <pre><code class="language-js">
 function loopCars() {
@@ -74,6 +124,12 @@ car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
 function doTimeoutCar1(i, delay) {
     setTimeout(function () {
         if ((i > 0) && (i < 25)) {
+            if (i == 2) {
+                carsSound = document.getElementById("car-sound-fx");
+                carsSound.volume = 0.4;
+                carsSound.currentTime = 0;
+                carsSound.play();
+            }
             sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
             sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
             if (i > 7)
@@ -93,7 +149,7 @@ function doTimeoutCar1(i, delay) {
     }, delay);
 }
         </code></pre>
-        
+
         <h1>Carro 2 (prata)</h1>
         <img src="img/car2.png" style="width: 100px; float: left;" alt="">
         <h4>Posição:</h4>
@@ -117,8 +173,15 @@ function doTimeoutCar2(i, delay) {
     }, delay);
 }
     </code></pre>
-        
+
         <h1>Carro 3 (vermelho)</h1>
+        <img src="img/car3.png" style="float: left; width: 100px;" alt="">
+        <h4>Posição:</h4>
+        <pre><code class="language-js">
+car3 = new component(75, 115, "img/car3.png", 250, -115, "image", 0);
+        </code></pre>
+        <br style="clear: both;">
+        <h4>Movimento:</h4>
         <pre><code class="language-js">
 function doTimeoutCar3(i, delay) {
     setTimeout(function () {
@@ -134,11 +197,24 @@ function doTimeoutCar3(i, delay) {
     }, delay);
 }
         </code></pre>
-        
+
         <h1>Avião</h1>
+        <img src="img/airplane.png" style="float: left; width: 180px; margin-top: 30px;" alt="">
+        <h4>Posição:</h4>
+        <pre><code class="language-js">
+airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
+        </code></pre>
+        <br style="clear: both;">
+        <h4>Movimento:</h4>
         <pre><code class="language-js">
 function doTimeoutAirplane(i, delay) {
     setTimeout(function () {
+        if (i == 19) {
+            airplaneAudio = document.getElementById("airplane-sound-fx");
+            airplaneAudio.volume = 0.3;
+            airplaneAudio.currentTime = 0.1;
+            airplaneAudio.play();
+        }
         if (i > 25) {
             move("right", airplane);
             move("down", airplane);
@@ -159,6 +235,8 @@ function doTimeoutAirplane(i, delay) {
         var sem1;
         var sem2;
 
+        var view = true;
+
         function startCanvas() {
             airplane = new component(350, 350, "img/airplane.png", -150, -150, "image", 0);
             car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
@@ -168,9 +246,25 @@ function doTimeoutAirplane(i, delay) {
             sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
             myBackground = new component(1000, 800, "img/background.png", 0, 0, "image", 0);
             myGameArea.start();
-            document.getElementById("car-sound-fx").volume = 0.4;
             move("right", car1);
         }
+
+        function addCss() {
+            if (view) {
+                myGameArea.canvas.style.float = "none";
+                document.getElementById("right-box").style.marginLeft = "20px";
+                document.getElementById("top-button").style.display = "none";
+                document.getElementById("bot-button").style.display = "block";
+            }
+            else {
+                myGameArea.canvas.style.float = "left";
+                document.getElementById("right-box").style.marginLeft = "1020px";
+                document.getElementById("top-button").style.display = "block";
+                document.getElementById("bot-button").style.display = "none";
+            }
+            view = !view;
+        }
+
 
         var myGameArea = {
             canvas: document.createElement("canvas"),
@@ -284,6 +378,12 @@ function doTimeoutAirplane(i, delay) {
         function doTimeoutCar1(i, delay) {
             setTimeout(function () {
                 if ((i > 0) && (i < 25)) {
+                    if (i == 2) {
+                        carsSound = document.getElementById("car-sound-fx");
+                        carsSound.volume = 0.4;
+                        carsSound.currentTime = 0;
+                        carsSound.play();
+                    }
                     sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
                     sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
                     if (i > 7)
@@ -333,7 +433,7 @@ function doTimeoutAirplane(i, delay) {
 
         function doTimeoutAirplane(i, delay) {
             setTimeout(function () {
-                if(i==19) {
+                if (i == 19) {
                     airplaneAudio = document.getElementById("airplane-sound-fx");
                     airplaneAudio.volume = 0.3;
                     airplaneAudio.currentTime = 0.1;
