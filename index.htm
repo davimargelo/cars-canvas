@@ -23,8 +23,8 @@
             background-image: url("img/clouds.gif");
             /* background-attachment: fixed; */
             background-repeat: no-repeat;
-            background-size: cover; 
-            opacity: 0.01;  
+            background-size: cover;
+            opacity: 0.01;
             z-index: 0;
             position: absolute;
         }
@@ -237,6 +237,19 @@ car1 = new component(115, 75, "img/car1.png", -115, 160, 0);
             </tr>
         </table>
         <h4>Movimento:</h4>
+        <p>
+            - o movimento do carro 1, exclusivamente, é feito quando a condição que diz: 'quando o contador não está entre 0 e 25 é aplicada a função <code class="language-js">move("right", car1)</code>'; a função faz o carro mover-se à direita. Quando a condição não é satisfeita (contador entre 0 e 25), o movimento do carro é limpo pela função <code class="language-js">clearmove(car1)</code> e ele permanece parado no semáforo 1 <span style="color: red;">Vermelho</span>.
+            <br><br>
+            - com o contador em 2, o efeito sonoro dos carros é tocado
+            <br><br>
+            - o semáforo 2 permanece <span style="color: green;">Verde</span> com o contador entre 0 e 25
+            <br><br>
+            - o semáforo 1 permanece, com o contador entre 0 e 25, <span style="color: red;">Vermelho</span>; e maior ou igual a 25, <span style="color: green;">Verde</span>; até que quando maior que 38 se torna <span style="color: yellow;">Amarelo</span>.
+            <br><br>
+            - quando o contador atingir seu último número (49), o movimento será reiniciado com a chamada da função <code class="language-js">resetcar1()</code>, fazendo com que o carro assuma a posição inicial novamente e que os semáforos voltem às cores iniciais.
+            <br><br>
+            - excepcionalmente, aproveita-se o looping incremental de movimento para chamar novamente a função <code class="language-js">loopCars()</code> e recomeçar todos os movimentos.
+        </p>
         <pre><code class="language-js"> 
 function doTimeoutCar1(i, delay) {
     setTimeout(function () {
@@ -343,7 +356,6 @@ function doTimeoutAirplane(i, delay) {
         </code></pre>
     </div>
     <script>
-
         var car1;
         var car2;
         var car3;
@@ -359,7 +371,7 @@ function doTimeoutAirplane(i, delay) {
         var car2Url = "img/car2.png";
         var car3Url = "img/car3.png";
         var airplaneUrl = "img/airplane.png"
-        
+
         function startCanvas() {
             airplane = new component(350, 350, airplaneUrl, -150, -150, 0);
             car1 = new component(115, 75, car1Url, -115, 160, 0);
@@ -374,7 +386,7 @@ function doTimeoutAirplane(i, delay) {
         }
 
         function changeDayAndNight() {
-            if (!day){
+            if (!day) {
                 document.getElementById("clouds-cover").style.opacity = "0.05";
                 myBackground = new component(1000, 800, "img/background.png", 0, 0, 0);
 
