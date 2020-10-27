@@ -3,9 +3,12 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="prism.js"></script>
+    <link href="prism.css" rel="stylesheet" />
     <style>
         body {
-            background-color: darkslategrey;
+            background-color: #000000;
+            background-image: linear-gradient(147deg, #000000 0%, #434343 74%);
             background-attachment: fixed;
         }
 
@@ -20,24 +23,131 @@
         }
 
         .right-box {
+            color: white;
             margin: 20px;
             margin-left: 1020px;
             height: 760px;
             text-align: left;
             padding: 20px;
-            background-color: dimgrey;
+            background-color: #000000;
+            background-image: linear-gradient(147deg, #000000 0%, #434343 74%);
             border: 1px solid #d3d3d3;
+            overflow-y: auto;
+        }
+
+        img {
+            width: 180px;
         }
     </style>
 
-    <audio id="sound-fx" autoplay loop>
+    <audio id="car-sound-fx" autoplay loop>
         <source src="./sound/car_sound_fx.mp3" type="audio/mp3">
+    </audio>
+
+    <audio id="airplane-sound-fx">
+        <source src="./sound/airplane.mp3" type="audio/mp3">
     </audio>
 </head>
 
 <body onload="startCanvas()">
     <div class="right-box">
-        dasdas
+        <h2>Função responsável pelo 'looping' da animação</h2>
+        <pre><code class="language-js">
+function loopCars() {
+    for (var i = 0; i < 50; i++) {
+        delay = i * delayMilliseconds;
+        doTimeoutCar1(i, delay); // faz o looping do carro 1
+        doTimeoutCar2(i, delay); // " do carro 2
+        doTimeoutCar3(i, delay); // " do carro 3
+        doTimeoutAirplane(i, delay); // " do avião
+    }
+}
+        </code></pre>
+        <h1>Carro 1 (preto)</h1>
+        <img src="img/car1.png" style="float: left; margin-top: 40px;" alt="">
+        <h4>Posição:</h4>
+        <pre><code class="language-js">
+car1 = new component(115, 75, "img/car1.png", -115, 160, "image", 0);
+        </code></pre>
+        <h4>Movimento:</h4>
+        <pre><code class="language-js"> 
+function doTimeoutCar1(i, delay) {
+    setTimeout(function () {
+        if ((i > 0) && (i < 25)) {
+            sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
+            sem1 = new component(115, 115, "img/semRed.png", 100, 70, "image", 0);
+            if (i > 7)
+                clearmove(car1);
+            if (i >= 24) {
+                sem1 = new component(115, 115, "img/semGreen.png", 100, 70, "image", 0);
+            }
+        }
+        else if (i == 49) {
+            resetcar1();
+            loopCars();
+        } else {
+            if (i > 38)
+                sem1 = new component(115, 115, "img/semYellow.png", 100, 70, "image", 0);
+            move("right", car1);
+        }
+    }, delay);
+}
+        </code></pre>
+        
+        <h1>Carro 2 (prata)</h1>
+        <img src="img/car2.png" style="width: 100px; float: left;" alt="">
+        <h4>Posição:</h4>
+        <pre><code class="language-js">
+car2 = new component(75, 115, "img/car2.png", 212, -250, "image", 0);
+        </code></pre>
+        <br style="clear: both;">
+        <h4>Movimento:</h4>
+        <pre><code class="language-js">
+function doTimeoutCar2(i, delay) {
+    setTimeout(function () {
+        if (i > 18 && i < 25) {
+            sem2 = new component(115, 115, "img/semYellow.png", 350, 70, "image", 0);
+            if (i >= 24)
+                sem2 = new component(115, 115, "img/semRed.png", 350, 70, "image", 0);
+        } else if (i == 49) {
+            resetcar2();
+        } else {
+            move("down", car2);
+        }
+    }, delay);
+}
+    </code></pre>
+        
+        <h1>Carro 3 (vermelho)</h1>
+        <pre><code class="language-js">
+function doTimeoutCar3(i, delay) {
+    setTimeout(function () {
+        if (i <= 9)
+            move("down", car3);
+        else if (i == 10) {
+            move("rotate", car3);
+
+        } else if (i == 49) {
+            resetcar3();
+        } else
+            move("right", car3);
+    }, delay);
+}
+        </code></pre>
+        
+        <h1>Avião</h1>
+        <pre><code class="language-js">
+function doTimeoutAirplane(i, delay) {
+    setTimeout(function () {
+        if (i > 25) {
+            move("right", airplane);
+            move("down", airplane);
+        }
+        if (i == 49)
+            resetAirplane();
+    }, delay);
+}
+        </code></pre>
     </div>
     <script>
 
@@ -58,7 +168,7 @@
             sem2 = new component(115, 115, "img/semGreen.png", 350, 70, "image", 0);
             myBackground = new component(1000, 800, "img/background.png", 0, 0, "image", 0);
             myGameArea.start();
-            document.getElementById("sound-fx").volume = 0.4;
+            document.getElementById("car-sound-fx").volume = 0.4;
             move("right", car1);
         }
 
@@ -207,7 +317,6 @@
             }, delay);
         }
 
-
         function doTimeoutCar3(i, delay) {
             setTimeout(function () {
                 if (i <= 9)
@@ -224,6 +333,12 @@
 
         function doTimeoutAirplane(i, delay) {
             setTimeout(function () {
+                if(i==19) {
+                    airplaneAudio = document.getElementById("airplane-sound-fx");
+                    airplaneAudio.volume = 0.3;
+                    airplaneAudio.currentTime = 0.1;
+                    airplaneAudio.play();
+                }
                 if (i > 25) {
                     move("right", airplane);
                     move("down", airplane);
