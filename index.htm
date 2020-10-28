@@ -142,7 +142,7 @@ var delay = 0;
 const delayMilliseconds = 250;
 
 function loopCars() {
-    car3GoRight = !car3GoRight;
+    car3GoRight = Math.floor(Math.random() * 10);
     for (var i = 0; i < 50; i++) {
         delay = i * delayMilliseconds;
         doTimeoutCar1(i, delay);
@@ -157,7 +157,7 @@ function loopCars() {
             <br><br>
             - A variável <code class="language-js">car3GoRight</code> é responsável por determinar se o carro 3
             (vermelho)
-            irá para a direita ou não; de forma alternada varia entre 'true' ou 'false'.
+            irá para a direita ou não; de forma alternada varia entre numeros aleatórios de 0 à 9. Se a variável for maior que 4, o carro irá para direita.
             <br><br>
             - Cada função chamada dentro do 'for' é responsável por executar o movimento dos objetos no Canvas.
             <br><br>
@@ -317,12 +317,12 @@ function doTimeoutCar3(i, delay) {
     setTimeout(function () {
         if (i <= 9)
             move("down", car3);
-        else if (i == 10 && car3GoRight) {
+        else if (i == 10 && car3GoRight > 4) {
             move("rotate", car3);
 
         } else if (i == 49) {
             resetcar3();
-        } else if (car3GoRight)
+        } else if (car3GoRight > 4)
             move("right", car3);
     }, delay);
 }   
@@ -364,7 +364,7 @@ function doTimeoutAirplane(i, delay) {
         var sem1;
         var sem2;
         var day = true;
-        var car3GoRight = false;
+        var car3GoRight = 0;
         var view = true;
 
         var car1Url = "img/car1.png";
@@ -597,12 +597,12 @@ function doTimeoutAirplane(i, delay) {
             setTimeout(function () {
                 if (i <= 9)
                     move("down", car3);
-                else if (i == 10 && car3GoRight) {
+                else if (i == 10 && car3GoRight > 4) {
                     move("rotate", car3);
 
                 } else if (i == 49) {
                     resetcar3();
-                } else if (car3GoRight)
+                } else if (car3GoRight > 4)
                     move("right", car3);
             }, delay);
         }
@@ -625,7 +625,7 @@ function doTimeoutAirplane(i, delay) {
         }
 
         function loopCars() {
-            car3GoRight = !car3GoRight;
+            car3GoRight = Math.floor(Math.random() * 10);
             for (var i = 0; i < 50; i++) {
                 delay = i * delayMilliseconds;
                 doTimeoutCar1(i, delay);
